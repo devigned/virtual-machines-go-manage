@@ -10,11 +10,11 @@ import (
 	"github.com/Azure/azure-sdk-for-go/arm/network"
 	"github.com/Azure/azure-sdk-for-go/arm/resources/resources"
 	"github.com/Azure/azure-sdk-for-go/arm/storage"
+	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/to"
 	"path"
-	"github.com/Azure/go-autorest/autorest"
 )
 
 const (
@@ -57,7 +57,7 @@ func init() {
 	spToken, err := adal.NewServicePrincipalToken(*oauthConfig, clientID, clientSecret, azure.PublicCloud.ResourceManagerEndpoint)
 	onErrorFail(err, "NewServicePrincipalToken failed")
 
-	refId := path.Join("/subscriptions/", subscriptionID, "/resourceGroups/vagrant/providers/Microsoft.Compute/images/sample-ubuntu")
+	refId := path.Join("/subscriptions/", subscriptionID, "/resourceGroups/test/providers/Microsoft.Compute/images/test-image")
 	imageRefId = &refId
 	createClients(subscriptionID, spToken)
 }
@@ -227,7 +227,7 @@ func setVMparameters(vmName, nicID string) compute.VirtualMachine {
 					ID: imageRefId,
 				},
 				OsDisk: &compute.OSDisk{
-					CreateOption: compute.DiskCreateOptionTypesAttach,
+					CreateOption: compute.DiskCreateOptionTypesFromImage,
 				},
 			},
 			OsProfile: &compute.OSProfile{
